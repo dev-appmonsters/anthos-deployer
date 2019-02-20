@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'anthos_deployer'
+require 'optparse'
+
+config_file_path = nil
+
+env_variables_file_path = nil
+
+deployment_environment = nil
+
+ARGV.options do |opts|
+  opts.on('--config_file=CONFIG_FILE') { |n| config_file_path = n }
+  opts.on('--env_variables_file=ENV_VARIABLES_FILE') { |n| env_variables_file_path = n }
+  opts.on('--deployment_environment=DEPLOYMENT_ENVIRONMENT') { |n| deployment_environment = n }
+  opts.parse!
+end
+
+# Load envs from env file.
+AnthosDeployer.load_envs_with_figaro(env_variables_file_path, deployment_environment)
+
+# Load deployment configs
+config_file = File.open(config_file_path)
+config_context_dir = File.dirname(File.absolute_path(config_file_path))
+config = AnthosDeployer.load_config(config_file)
+
+namespace = config[:kube][:namespace].to_s
+context = config[:kube][:context].to_s
+
+logger = KubernetesDeploy::FormattedLogger.build(namespace, context)
+
+AnthosDeployer::RolloutDeployment.run!(
+  config: config,
+  logger: logger,
+  config_context_dir: config_context_dir,
+  context: context,
+  namespace: namespace
+)

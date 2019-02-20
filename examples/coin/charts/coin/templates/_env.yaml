@@ -1,0 +1,15 @@
+envFrom:
+  - configMapRef:
+      name: anthos-db-config
+  - configMapRef:
+      name: anthos-nats-config
+  - configMapRef:
+      name: jaeger-agent-client-config
+env:
+  - name: DB_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: anthos
+        key: db_password
+  - name: DB_NAME
+    value: coin

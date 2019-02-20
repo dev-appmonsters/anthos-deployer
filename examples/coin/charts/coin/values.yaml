@@ -1,0 +1,5 @@
+replicaCount: 2
+image:
+  repository: asia.gcr.io/xyz-devops
+  tag: "60f1a57"
+  pullPolicy: IfNotPresent

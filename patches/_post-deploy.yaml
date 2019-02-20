@@ -1,0 +1,7 @@
+metadata:
+  labels:
+    databaseState: 'OK'
+spec:
+  template:
+    spec:
+      initContainers: []

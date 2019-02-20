@@ -1,0 +1,10 @@
+metadata:
+  labels:
+    databaseState: not-ok-<%= Time.now.to_i %>
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: infinite-wait
+          image: busybox
+          command: ['sh', '-c', 'while true; do echo waiting for this to be removed; sleep 2; done;']

@@ -1,0 +1,37 @@
+#============================= Anthos Config ===============================
+
+docker:
+  repository: <%= ENV['DOCKER_REPOSITORY'] %>
+
+kube:
+  namespace: <%= ENV['KUBE_NAMESPACE'] %>
+  context: <%= ENV['KUBE_CONTEXT'] %>
+
+common_code:
+  docker:
+    context: common
+
+#============================= CAUTION ======================================
+# Never ever put any sensitive information here.
+#============================= CAUTION ======================================
+
+#============================= Charts Config ================================
+charts:
+  coin:
+    docker_context: coin
+    chart_path: coin/charts/coin/
+    update_service_code_hash: true
+    require_common_code: true
+    patch_after_commands: true
+    chart_overrides:
+      replicaCount: 2
+    install_cmds:
+      - entrypoint: [make]
+        args: [create-db]
+      - entrypoint: [make]
+        args: [migrate-db]
+      - entrypoint: [make]
+        args: [seed-db]
+    pre_upgrade_cmds:
+      - entrypoint: [make]
+        args: [migrate-db]

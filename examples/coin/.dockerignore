@@ -1,0 +1,11 @@
+#
+# Ignore these directories & files from docker context so that these are not copied from host to the container image.
+#
+.dist/
+dist/
+node_modules/
+yarn-error.log
+Dockerfile
+tsconfig.json
+tslint.json
+

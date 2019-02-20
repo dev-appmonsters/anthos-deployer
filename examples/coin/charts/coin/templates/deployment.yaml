@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: coin
+  labels:
+    app: coin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    serviceHash: {{ .Values.image.tag }}
+    configDigest: {{ .Values.config_digest }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: coin
+        release: {{ .Release.Name }}
+    spec:
+      initContainers:
+        - name: infinite-wait
+          image: busybox
+          command: ['sh', '-c', 'while true; do echo waiting for this to be removed; sleep 2; done;']
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}/coin:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{ include (print .Template.BasePath "/_env.yaml") . | indent 10 }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
