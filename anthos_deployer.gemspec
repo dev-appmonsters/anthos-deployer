@@ -49,6 +49,6 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.add_development_dependency 'minitest', '~> 5.0'
   spec.add_development_dependency 'minitest-stub-const', '~> 0.6'
   spec.add_development_dependency 'mocha', '~> 1.1'
-  spec.add_development_dependency 'rake', '~> 10.5'
+  spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'webmock', '~> 3.0'
 end
